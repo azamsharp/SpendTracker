@@ -30,28 +30,32 @@ struct BudgetListScreen: View {
             Section("New Budget") {
                 TextField("Name", text: $name)
                 TextField("Limit", value: $limit, format: .number)
-                    //.keyboardType(.numberPad)
-                Button("Clear") {
-                    limit = nil
-                }
+                    .keyboardType(.numberPad)
                 Button("Save") {
-                    //saveBudget()
-                    //name = ""
+                    saveBudget()
+                    name = ""
                     limit = nil
                 }.disabled(!isFormValid)
             }
             
             Section("Budgets") {
                 List(budgets) { budget in
-                    HStack {
-                        Text(budget.name)
-                        Spacer()
-                        Text(budget.limit, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                    
+                    NavigationLink(value: budget) {
+                        HStack {
+                            Text(budget.name)
+                            Spacer()
+                            Text(budget.limit, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                        }
                     }
+                    
                 }
             }
             
         }.navigationTitle("SpendTracker")
+            .navigationDestination(for: Budget.self) { budget in
+                BudgetDetailScreen(budget: budget)
+            }
     }
 }
 
